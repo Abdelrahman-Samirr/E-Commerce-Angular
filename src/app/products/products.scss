@@ -1,0 +1,115 @@
+img {
+  width: 100%;
+}
+
+.page__header{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.page__header i{
+  scale: 1.5;
+}
+
+.page__title{
+  font-size: 22px;
+  font-weight: bold;
+  padding: 30px 0;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.card {
+  width: 32%;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(201, 201, 201, 0.218);
+
+}
+
+figure img{
+  cursor: pointer;
+  
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.title{
+  font-weight: bold;
+  font-size: 20px;
+}
+.price{
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.stars{
+  margin-top: 15px;
+}
+
+button{
+  padding: 8px 18px;
+  font-weight: bold;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 15px;
+}
+
+.remove {
+  color: red;
+
+}
+
+.add {
+  color: green;
+}
+
+button:has(.add):hover:not(:disabled){
+  background-color: green;
+
+  .add{
+    color: #ffff;
+  }
+}
+button:has(.remove):hover{
+  background-color: rgba(255, 24, 24, 0.868);
+  
+  .remove{
+    color: #ffff;
+  }
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.stock{
+  display: inline;
+  color: #ffff;
+  padding: 5px 25px;
+  border: none;
+  border-radius: 20px;
+}
+
+.in-stock{
+  background-color: green;
+}
+
+.out-stock{
+  background-color: rgba(255, 24, 24, 0.868);
+}

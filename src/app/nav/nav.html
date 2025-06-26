@@ -1,0 +1,14 @@
+<section>
+  <div class="container">
+    <p>Products App</p>
+    <div class="left">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/register">Register</a>
+      <a routerLink="/login">Login</a>
+      <div class="cart">
+        <div routerLink="/cart"><i class="fa-solid fa-cart-shopping"></i></div>
+        <span>{{cartService.cartCount()}}</span>
+      </div>
+    </div>
+  </div>
+</section>

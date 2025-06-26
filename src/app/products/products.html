@@ -1,0 +1,44 @@
+<section>
+  <div class="container">
+    <div class="page__header">
+    <h4 class="page__title">Welcome to our shopping website</h4>
+    <i class="fa-regular fa-face-smile-beam" style="color: #FFD43B;"></i>
+    </div>
+    <div class="cards">
+      @for(item of products(); track item.id){
+      <div class="card">
+
+        <figure>
+          @if(item.availabilityStatus==='In Stock'){
+          <p class="stock in-stock">{{item.availabilityStatus}}</p>
+          }@else{
+          <p class="stock out-stock">{{item.availabilityStatus}}</p>
+          }
+          <img [src]="item.thumbnail" alt="product" [routerLink]="['/product', item.id]" />
+        </figure>
+        <div class="header">
+          <h4 class="title">{{item.title}}</h4>
+          <p class="price">${{item.price}}</p>
+        </div>
+        <p>{{item.description}}</p>
+
+        <div class="stars">
+                <i class="fa-solid fa-star" style="color: #03d100;"></i>
+                <i class="fa-solid fa-star" style="color: #03d100;"></i>
+                <i class="fa-solid fa-star" style="color: #03d100;"></i>
+                <i class="fa-solid fa-star" style="color: #03d100;"></i>
+                <i class="fa-solid fa-star" style="color: #03d100;"></i>
+            </div>
+
+        <button (click)="toggleCart(item.id)" [disabled]="item.availabilityStatus !== 'In Stock'">
+          @if(cartService.selectedProducts().includes(item.id)){
+          <span class="remove">Remove from Cart</span>
+          }@else{
+          <span class="add">Add to Cart</span>
+          }
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</section>

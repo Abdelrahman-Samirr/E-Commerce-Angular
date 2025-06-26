@@ -1,0 +1,89 @@
+<form [formGroup]="registerForm" (ngSubmit)="submit()">
+
+    <div class="form-field">
+
+        <label>Name</label>
+        
+        <input type="text" formControlName="name" placeholder="Enter your name...">
+
+        @if(registerForm.get('name')?.touched && registerForm.get('name')?.errors){
+
+            @if(registerForm.get('name')?.getError('required')){
+            <small>Name is Required</small>
+            }
+
+            @if(registerForm.get('name')?.getError('minlength')){
+            <small>Name should be more than 2 letters</small>
+            }
+        }
+    </div>
+
+    <div class="form-field">
+
+        <label>Email</label>
+
+        <input type="email" formControlName="email" placeholder="Enter your email..." />
+
+        @if(registerForm.get('email')?.touched && registerForm.get('email')?.errors){
+
+            @if(registerForm.get('email')?.getError('required')){
+            <small>Email is Required</small>
+            }
+
+            @if(registerForm.get('email')?.getError('email')){
+            <small>This Email format is invalid</small>
+            }
+        }
+    </div>
+
+    <div class="form-field">
+
+        <label>User Name</label>
+
+        <input type="text" formControlName="userName" placeholder="Enter your user name..." />
+
+        @if(registerForm.get('userName')?.touched && registerForm.get('userName')?.errors){
+
+            @if(registerForm.get('userName')?.getError('required')){
+            <small>User Name is Required</small>
+            }
+
+        }
+    </div>
+
+    <div class="form-field">
+
+        <label>Password</label>
+
+        <input type="password" formControlName="password" placeholder="Enter your password..." />
+
+        @if(registerForm.get('password')?.touched && registerForm.get('password')?.errors){
+
+            @if(registerForm.get('password')?.getError('required')){
+            <small>password is Required</small>
+            }
+
+            @if(registerForm.get('password')?.getError('pattern')){
+            <small>password is not valid format</small>
+            }
+
+        }
+    </div>
+
+    <div class="form-field">
+
+        <label>Confirm Password</label>
+
+        <input type="password" formControlName="confirmPassword" placeholder="Enter your confirm Password..." />
+
+        @if(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.errors){
+
+            @if(registerForm.get('confirmPassword')?.getError('required')){
+            <small>password is Required</small>
+            }
+
+        }
+    </div>
+
+    <button [disabled]="!registerForm.valid">Register</button>
+</form>

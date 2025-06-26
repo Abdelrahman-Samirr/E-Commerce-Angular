@@ -1,0 +1,39 @@
+<div class="container">
+    <h1>Cart</h1>
+    <div class="cart__body">
+        <div class="header">
+            <h4>Description</h4>
+            <h4>Quantity</h4>
+            <h4>Remove</h4>
+            <h4>Price</h4>
+        </div>
+        @if(products().length ==0){
+        <p class="empty">There are no products selected</p>
+        }@else{
+        @for (item of products(); track item.id) {
+            
+        <div class="product">
+            <div class="left">
+                <figure><img [src]="item.thumbnail" alt="product" [routerLink]="['/product', item.id]"></figure>
+                <div class="info">
+                    <h4 class="title">{{ item.title }}</h4>
+                    <p class="desc">Product code: <span>{{ item.sku }}</span></p>
+                </div>
+            </div>
+            <div class="counter__item">
+                <a class="count-sign negative" (click)="decreasingProduct(item.id)">
+                    <i class="fa-solid fa-minus"></i>
+                </a>
+                <p>{{ cartService.productCount() }}</p>
+                <a class="count-sign positive" (click)="increasingProduct(item.id)">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
+            <button class="remove" (click)="removeItem(item.id)">Remove</button>
+            <p class="price">${{ item.price }}</p>
+        </div>
+        }
+        }
+
+    </div>
+</div>

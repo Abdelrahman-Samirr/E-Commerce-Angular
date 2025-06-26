@@ -1,0 +1,48 @@
+section{
+  background-color: rgba(211, 211, 211, 0.455);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+p{
+  font-size: 18px;
+  font-weight: 500;
+}
+a{
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: black;
+  font-size: 18px;
+}
+.cart {
+  position: relative;
+  margin-right: 20px;
+  
+}
+i{
+  cursor: pointer;
+}
+
+span {
+  position: absolute;
+  top: 0;
+  background-color: rgba(128, 128, 128, 0.527);
+  padding: 1px 4px;
+  border-radius: 3px;
+  right: 0;
+  transform: translate(150%,-60%);
+  font-size: 13px;
+  font-weight: bold;
+}
