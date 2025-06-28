@@ -1,54 +1,49 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CartService } from '../cart-service';
-import { ProductService } from '../product-service';
 import { RouterModule } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
+import { Product } from '../product-interface';
 
 @Component({
   selector: 'app-cart',
-  imports: [RouterModule],
+  standalone: true,
+  imports: [RouterModule, CommonModule],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'
 })
-export class Cart implements OnInit {
-
-  productService = inject(ProductService);
+export class Cart {
 
   cartService = inject(CartService);
 
-  products = signal<any[]>([]);
+  products = computed(() => this.cartService.selectedProducts());
 
-  ngOnInit() {
-  this.productService.getProducts().subscribe({
-    next: (data: any) => {
-      const allProducts = data.products;
-      const cartIds = this.cartService.selectedProducts();
-      const filteredProduct = allProducts.filter((p: any) => cartIds.includes(p.id));
-      this.products.set(filteredProduct);
-    },
-    error: (err) => console.log('Failed to load products:', err),
-  });
-}
+  increasingProduct(id: number) {
+    this.cartService.increaseQuantity(id);
+  }
 
-increasingProduct(id: number) {
-  this.cartService.addProduct(id);
-  this.ngOnInit(); 
-}
+  decreasingProduct(id: number) {
+    const product = this.products().find(p => p.id === id);
+    if (product && product.quantity > 1) {
+      this.cartService.decreaseQuantity(id);
+    }
+  }
 
-decreasingProduct(id: number) {
-  this.cartService.removeProduct(id);
-  this.ngOnInit(); 
-}
+  getProductQuantity(id: number): number {
+    return this.cartService.getQuantity(id);
+  }
 
-getProductQuantity(id: number): number {
-  return this.cartService.selectedProducts().filter(p => p === id).length;
-}
+  removeItem(id: number) {
+    const updated = this.products().filter(p => p.id !== id);
+    this.cartService.selectedProducts.set(updated);
+  }
 
-removeItem(id: number) {
-  const updated = this.cartService.selectedProducts().filter(p => p !== id);
-  this.cartService.selectedProducts.set(updated);
-  this.ngOnInit(); // refresh
-}
+  getTotalPrice(): number {
+    return this.products().reduce((total, item) => {
+      return total + (item.price * item.quantity);
+    }, 0);
+  }
 
-  
+  clearCart() {
+    this.cartService.clearCart();
+  }
 }

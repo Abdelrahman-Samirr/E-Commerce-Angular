@@ -1,83 +1,68 @@
 import { Injectable, signal } from '@angular/core';
+import { Product } from './product-interface';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class CartService {
 
-  selectedProducts = signal<number[]>([])
+  selectedProducts = signal<Product[]>([]);
 
-  toggleBtn(productId: number) {
+  toggleBtn(product: Product) {
 
-    const products = this.selectedProducts()
+    const currentProducts = this.selectedProducts()
 
-    const selectedBoolean = products.includes(productId)
+    const selectedBoolean = currentProducts.find(p => p.id === product.id);
 
-    let updated: number[];
+    let updated: Product[];
 
     if (selectedBoolean) {
 
-      updated = products.filter(ID => ID !== productId)
+      updated = currentProducts.filter(p => p.id !== product.id)
 
     } else {
-      updated = [...products, productId]
+      updated = [...currentProducts, { ...product, quantity: 1 }]
     }
 
     this.selectedProducts.set(updated);
 
   }
 
-  ProductCountArr = signal<number[]>([])
 
-  addProduct(id: number) {
-    console.log("increase")
-
-    const productArr = this.ProductCountArr()
-
-    let updated: number[];
-
-    updated = [...productArr, id]
-
-    this.ProductCountArr.set(updated)
+  increaseQuantity(id: number) {
+    const updated = this.selectedProducts().map(p => {
+      if (p.id === id) {
+        return { ...p, quantity: p.quantity + 1 };
+      }
+      return p;
+    });
+    this.selectedProducts.set(updated);
   }
 
-  removeProduct(id: number) {
-    console.log("decrease")
-
-    const productArr = this.ProductCountArr()
-
-    let updated: number[];
-
-    if (productArr.length) {
-
-      updated = [...productArr]
-
-      updated.splice(updated.length -1 ,1)
-
-      this.ProductCountArr.set(updated)
-    }
-
+  decreaseQuantity(id: number) {
+    const updated = this.selectedProducts().flatMap(p => {
+      if (p.id === id) {
+        return (p.quantity - 1) > 0 ? [{ ...p, quantity: p.quantity - 1 }] : [];
+      }
+      return [p];
+    });
+    this.selectedProducts.set(updated);
   }
 
-  productCount(): number {
-    return this.ProductCountArr().length
+  // quantity of product
+  getQuantity(id: number): number {
+    return this.selectedProducts().find(p => p.id === id)?.quantity || 0;
   }
 
+  // quantity of all products in cart
   cartCount(): number {
-    return this.selectedProducts().length;
+    return this.selectedProducts().reduce((acc, p) => acc + p.quantity, 0);
   }
 
-
-  addQuantityProduct(id: number, quantity: number){
-
-    const current = this.selectedProducts()
-    let updated = [...current]
-
-    for (let i = 0; i < quantity; i++) {
-    updated.push(id);
-  }
-
-  this.selectedProducts.set(updated);
+  // clearing cart
+  clearCart() {
+    this.selectedProducts.set([]);
   }
 
 }

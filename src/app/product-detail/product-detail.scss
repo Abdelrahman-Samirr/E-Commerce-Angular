@@ -4,7 +4,8 @@ $border-bottom: solid 2px rgba(184, 184, 184, 0.455);
 .container{
     display: flex;
     justify-content: space-between;
-    // gap: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
 }
 
 img{

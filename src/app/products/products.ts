@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ProductService } from '../product-service';
 import { CartService } from '../cart-service';
 import { RouterModule } from '@angular/router';
+import { Product } from '../product-interface';
 
 @Component({
   selector: 'app-products',
@@ -17,7 +18,8 @@ export class Products implements OnInit {
   cartService = inject(CartService);
 
   // products: any[] = [];
-  products = signal<any[]>([]);
+  
+  products = signal<Product[]>([]);
 
   ngOnInit() {
     this.productService.getProducts().subscribe({
@@ -26,7 +28,13 @@ export class Products implements OnInit {
     });
   }
 
-  toggleCart(id: number){
-    this.cartService.toggleBtn(id)
+  toggleCart(id: number) {
+    const product = this.products().find(p => p.id === id);
+    if (product) {
+      this.cartService.toggleBtn({ ...product, quantity: 1 });
+    }
+  }
+  isInCart(id: number): boolean {
+    return this.cartService.selectedProducts().some(p => p.id === id);
   }
 }

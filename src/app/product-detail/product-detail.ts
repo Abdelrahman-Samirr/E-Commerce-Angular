@@ -3,9 +3,11 @@ import { ProductService } from '../product-service';
 import { CartService } from '../cart-service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Product } from '../product-interface';
 
 @Component({
   selector: 'app-product-detail',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
@@ -13,46 +15,49 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductDetail implements OnInit {
 
   route = inject(ActivatedRoute);
-
   productService = inject(ProductService);
-
   cartService = inject(CartService);
 
-  products = signal<any[]>([]);
+  product!: Product;
 
-  product = signal<any>(null);
+  quantity = signal(1); // for counter
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.productService.getProducts().subscribe({
-      next: (data: any) => {
-
-        const productList = data.products as any[];
-
-        this.products.set(productList);
-
-        const selectedProduct = productList.find(p => p.id === id);
-
-        this.product.set(selectedProduct);
-      },
-      error: (err) => console.log('Failed to load products: ', err),
-    });
+    if (id) {
+      this.productService.getProductById(id).subscribe((res: Product) => {
+        this.product = res;
+      });
+    }
   }
 
-
-  increasingProduct(id: number) {
-    this.cartService.addProduct(id)
+  increasingProduct() {
+    this.quantity.update(q => q + 1);
   }
 
-  decreasingProduct(id: number) {
-    this.cartService.removeProduct(id)
+  decreasingProduct() {
+    this.quantity.update(q => q > 1 ? q - 1 : 1);
   }
 
-  addToCart(id: number) {
-    
-    const quantity = this.cartService.productCount();
+  addToCart() {
+    const currentQty = this.quantity();
+    const existingQty = this.cartService.getQuantity(this.product.id);
 
-    this.cartService.addQuantityProduct(id, quantity);
+    if (currentQty !== existingQty) {
+      const updatedProducts = this.cartService.selectedProducts().filter(p => p.id !== this.product.id);
+      // this.cartService.selectedProducts.set([...updatedProducts,{ ...this.product, quantity: currentQty }
+
+      const newProduct: Product = {
+        ...this.product,
+        quantity: currentQty,
+      };
+
+      this.cartService.selectedProducts.set([...updatedProducts, newProduct]);
+      ;
+    }
+  }
+
+  isOutOfStock(): boolean {
+    return this.product.availabilityStatus === 'Low in Stock';
   }
 }

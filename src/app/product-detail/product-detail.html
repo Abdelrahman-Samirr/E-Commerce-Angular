@@ -1,57 +1,60 @@
 <div class="container">
-
-    <div class="photos">
-        <figure><img [src]="product().thumbnail" alt=""></figure>
-
-        <div class="photo-group">
-            <div class="photo__item"><img [src]="product().thumbnail" alt=""></div>
-            <div class="photo__item"><img [src]="product().thumbnail" alt=""></div>
-            <div class="photo__item"><img [src]="product().thumbnail" alt=""></div>
-            <div class="photo__item"><img [src]="product().thumbnail" alt=""></div>
-
-        </div>
+  <div class="photos">
+    <figure><img [src]="product.thumbnail" alt=""></figure>
+    <div class="photo-group">
+      @for(img of product.images; track img ){
+      <div class="photo__item" ><img [src]="img" alt=""></div>
+      }
     </div>
-    <div class="details">
-        <div class="details__header">
-            <h2 class="title">{{product().title}}</h2>
-            <p class="desc">{{product().description}}</p>
-            <div class="stars">
-                <i class="fa-solid fa-star" style="color: #03d100;"></i>
-                <i class="fa-solid fa-star" style="color: #03d100;"></i>
-                <i class="fa-solid fa-star" style="color: #03d100;"></i>
-                <i class="fa-solid fa-star" style="color: #03d100;"></i>
-                <i class="fa-solid fa-star" style="color: #03d100;"></i>
-            </div>
-        </div>
-        <div class="details__price">
-            <h4 class="price__text">${{product().price}} or ${{product().price/5.5 | number: '1.2-2'}}/month</h4>
-            <p>Suggested payments with 6 months special financing</p>
-        </div>
+  </div>
 
-        @if(product().availabilityStatus==='In Stock'){
-        <p class="stock in-stock">{{product().availabilityStatus}}</p>
-        }@else{
-        <p class="stock out-stock">{{product().availabilityStatus}}</p>
+  <div class="details">
+    <div class="details__header">
+      <h2 class="title">{{product.title}}</h2>
+      <p class="desc">{{product.description}}</p>
+      <div class="stars">
+        @for(star of [1,2,3,4,5]; track star){
+        <i class="fa-solid fa-star" style="color: #03d100;"></i>
         }
-        <div class="more-info">
-            <p>More information</p>
-            <div class="info">
-                <p class="info__item">{{product().category}}</p>
-                <p class="info__item">{{product().brand}}</p>
-            </div>
-        </div>
-        <div class="counter">
-            <div class="counter__item">
-                <a (click)="decreasingProduct(product().id)" class="count-sign"><i class="fa-solid fa-minus"></i></a>
-                <p >{{cartService.productCount()}}</p>
-                <a (click)="increasingProduct(product().id)" class="count-sign"><i class="fa-solid fa-plus"></i></a>
-            </div>
-            <p>Only <span class="stock-count">{{product().stock}} items</span> Lefts! <br>Don't miss it</p>
-        </div>
-        <div class="payed">
-            <button class="btn buy" [disabled]="cartService.productCount() === 0">Buy Now</button>
-            <button class="btn add" [disabled]="cartService.productCount() === 0" (click)="addToCart(product()?.id)">Add to Cart</button>
-        </div>
+      </div>
     </div>
 
+    <div class="details__price">
+      <h4 class="price__text">
+        ${{product.price}} or ${{product.price/5.5 | number: '1.2-2'}}/month
+      </h4>
+      <p>Suggested payments with 6 months special financing</p>
+    </div>
+
+    <p class="stock" [ngClass]="{
+      'in-stock': product.availabilityStatus === 'In Stock',
+      'out-stock': product.availabilityStatus !== 'In Stock'
+    }">
+      {{product.availabilityStatus}}
+    </p>
+
+    <div class="more-info">
+      <p>More information</p>
+      <div class="info">
+        <p class="info__item">{{product.category}}</p>
+        <p class="info__item">{{product.brand}}</p>
+      </div>
+    </div>
+
+    <div class="counter">
+      <div class="counter__item">
+        <a (click)="decreasingProduct()" class="count-sign"><i class="fa-solid fa-minus"></i></a>
+        <p>{{ quantity() }}</p>
+        <a (click)="increasingProduct()" class="count-sign"><i class="fa-solid fa-plus"></i></a>
+      </div>
+      <p>Only <span class="stock-count">{{product.stock}} items</span> Left!<br>Don't miss it</p>
+    </div>
+
+    <div class="payed">
+      <button class="btn buy" [disabled]="isOutOfStock()">Buy Now</button>
+      <button class="btn add" 
+              [disabled]="isOutOfStock()" 
+              (click)="addToCart()">Add to Cart</button>
+    </div>
+  </div>
 </div>
